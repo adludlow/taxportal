@@ -156,7 +156,7 @@ type alias PaygPayer = {
     contactDetails : ContactDetails,
     tradingName : String,
     financialYear : String,
-    payees : List PaygPayee
+    inb : IndividualNonBusinessPaymentSummary
 }
 
 paygPayerToPSARRec : PaygPayer -> String
@@ -183,7 +183,8 @@ paygPayerToPSARRec paygPayer =
             payerCDName,
             payerCDPhoneNumber,
             payerCDFax,
-            createPSARFieldRPad "" 1 ' '
+            createPSARFieldRPad "" 1 ' ',
+            individualNonBusinessSummaryToPSARRec paygPayer.inb
         ]
 
 initPaygPayer : PaygPayer
@@ -195,7 +196,7 @@ initPaygPayer =
               initContactDetails
               ""
               ""
-              []
+              initIndividualNonBusinessPaymentSummary
 
 type PaygPayerMsg =
     UpdatePayerABN String
@@ -205,9 +206,16 @@ type PaygPayerMsg =
     | UpdatePayerAddress AddressMsg
     | UpdatePayerContactDetails ContactDetailsMsg
     | UpdatePayerFinancialYear String
+    | UpdateINBMsg IndividualNonBusinessPaymentSummaryMsg
 
 type alias IndividualNonBusinessPaymentSummary = {
     incomeType: String,
+    taxFileNumber: String,
+    firstName: String,
+    lastName: String,
+    secondName: String,
+    dob: String,
+    address: Address,
     paymentPeriodStartDate: String,
     paymentPeriodEndDate: String,
     totalTaxWithheld: String,
@@ -236,6 +244,12 @@ initIndividualNonBusinessPaymentSummary =
                                         ""
                                         ""
                                         ""
+                                        initAddress
+                                        ""
+                                        ""
+                                        ""
+                                        ""
+                                        ""
                                         ""
                                         ""
                                         ""
@@ -250,6 +264,68 @@ initIndividualNonBusinessPaymentSummary =
                                         ""
                                         ""
 
+individualNonBusinessSummaryToPSARRec : IndividualNonBusinessPaymentSummary -> String
+individualNonBusinessSummaryToPSARRec inb =
+    let
+        inbHeader = initPSARRec "628" "DINB"
+        inbIncomeType = createPSARFieldRPad inb.incomeType 3 ' '
+        inbTaxFileNumber = createPSARFieldRPad inb.taxFileNumber 9 ' '
+        inbDOB = createPSARFieldRPad inb.dob 8 ' '
+        inbLastName = createPSARFieldRPad inb.lastName 30 ' '
+        inbFirstName = createPSARFieldRPad inb.firstName 15 ' '
+        inbSecondName = createPSARFieldRPad inb.secondName 15 ' '
+        inbAddress = addressToPSARRec inb.address
+        inbPaymentPeriodStartDate = createPSARFieldRPad inb.paymentPeriodStartDate 8 ' '
+        inbPaymentPeriodEndDate = createPSARFieldRPad inb.paymentPeriodEndDate 8 ' '
+        inbTotalTaxWithheld = createPSARFieldLPad inb.totalTaxWithheld 8 '0'
+        inbGrossPayments = createPSARFieldRPad inb.grossPayments 8 '0'
+        inbTotalAllowances = createPSARFieldLPad inb.totalAllowances 8 '0'
+        inbLumpSumPaymentA = createPSARFieldLPad inb.lumpSumPaymentA 8 '0'
+        inbLumpSumPaymentB = createPSARFieldLPad inb.lumpSumPaymentB 8 '0'
+        inbLumpSumPaymentC = createPSARFieldLPad inb.lumpSumPaymentC 8 '0'
+        inbLumpSumPaymentD = createPSARFieldLPad inb.lumpSumPaymentD 8 '0'
+        inbCommunityDevelopmentEmploymentProject = createPSARFieldLPad inb.communityDevelopmentEmploymentProject 8 '0'
+        zeroFiller1 = createPSARFieldLPad "" 8 '0'
+        inbFringeBenefits = createPSARFieldLPad inb.fringeBenefits 8 '0'
+        inbAmendment = "O"
+        inbEmployeeSuper = createPSARFieldLPad inb.employeeSuper 8 '0'
+        inbLumpSumPaymentAType = " "
+        inbWorkplaceGiving = createPSARFieldLPad inb.workplaceGiving 8 '0'
+        inbUnionFees = createPSARFieldLPad inb.unionFees 8 '0'
+        inbExemptForeignIncome = createPSARFieldLPad inb.exemptForeignEmploymentIncome 8 '0'
+        inbDeductableAnnuity = createPSARFieldLPad inb.deductableAnnuity 8 '0'
+    in
+        concat [
+            inbHeader,
+            inbIncomeType,
+            inbTaxFileNumber,
+            inbDOB,
+            inbLastName,
+            inbFirstName,
+            inbSecondName,
+            inbAddress,
+            inbPaymentPeriodStartDate,
+            inbPaymentPeriodEndDate,
+            inbTotalTaxWithheld,
+            inbGrossPayments,
+            inbTotalAllowances,
+            inbLumpSumPaymentA,
+            inbLumpSumPaymentB,
+            inbLumpSumPaymentC,
+            inbLumpSumPaymentD,
+            inbCommunityDevelopmentEmploymentProject,
+            zeroFiller1,
+            inbFringeBenefits,
+            inbAmendment,
+            inbEmployeeSuper,
+            inbLumpSumPaymentAType,
+            inbWorkplaceGiving,
+            inbUnionFees,
+            inbExemptForeignIncome,
+            inbDeductableAnnuity,
+            createPSARFieldRPad "" 275 ' '
+        ]
+
 type alias PaygPayee = {
     taxFileNumber: String,
     firstName: String,
@@ -257,7 +333,7 @@ type alias PaygPayee = {
     secondName: String,
     dob: String,
     address: Address,
-    individualNonBusinessPaymentSummary: IndividualNonBusinessPaymentSummary
+    inb : IndividualNonBusinessPaymentSummary
 }
 
 initPaygPayee: PaygPayee
@@ -281,6 +357,12 @@ type PaygPayeeMsg =
 
 type IndividualNonBusinessPaymentSummaryMsg =
     UpdatePayeeINBIncomeType String
+    | UpdatePayeeINBTaxFileNumber String
+    | UpdatePayeeINBFirstName String
+    | UpdatePayeeINBLastName String
+    | UpdatePayeeINBSecondName String
+    | UpdatePayeeINBDOB String
+    | UpdatePayeeINBAddress AddressMsg
     | UpdatePayeeINBPaymentPeriodStartDate String
     | UpdatePayeeINBPaymentPeriodEndDate String
     | UpdatePayeeINBTotalTaxWithheld String

@@ -39,6 +39,7 @@ paygPayerView paygPayer =
     let
         addrView = addressView paygPayer.address
         cdView = contactDetailsView paygPayer.contactDetails
+        inbView = paygIndividualNonBusinessPaymentSummaryView paygPayer.inb
     in
         div [] [
             h1 [] [ text "Payg Payer" ],
@@ -49,7 +50,8 @@ paygPayerView paygPayer =
                 li [] [ Html.map UpdatePayerAddress addrView ],
                 li [] [ Html.map UpdatePayerContactDetails cdView ],
                 li [] [ inputField "Trading Name" UpdatePayerTradingName ],
-                li [] [ inputField "Financial Year" UpdatePayerFinancialYear ]
+                li [] [ inputField "Financial Year" UpdatePayerFinancialYear ],
+                li [] [ Html.map UpdateINBMsg inbView ]
             ]
         ]
 
@@ -57,7 +59,7 @@ paygPayeeView : PaygPayee -> Html PaygPayeeMsg
 paygPayeeView paygPayee =
     let
         addrView = addressView paygPayee.address
-        individualNonBusinessPaymentSummaryView = paygIndividualNonBusinessPaymentSummaryView paygPayee.individualNonBusinessPaymentSummary
+        individualNonBusinessPaymentSummaryView = paygIndividualNonBusinessPaymentSummaryView paygPayee.inb
     in
         div [] [
             h1 [] [ text "Payg Payee" ],
@@ -74,28 +76,37 @@ paygPayeeView paygPayee =
 
 paygIndividualNonBusinessPaymentSummaryView : IndividualNonBusinessPaymentSummary -> Html IndividualNonBusinessPaymentSummaryMsg
 paygIndividualNonBusinessPaymentSummaryView individualNBPaymentSummary =
-    div [] [
-        h1 [] [ text "Individual Non Business Payment Summary" ],
-        ul [] [
-            li [] [ inputField "Income Type" UpdatePayeeINBIncomeType ],
-            li [] [ inputField "Payment Period Start Date" UpdatePayeeINBPaymentPeriodStartDate ],
-            li [] [ inputField "Payment Period End Date" UpdatePayeeINBPaymentPeriodEndDate ],
-            li [] [ inputField "Total Tax Withheld" UpdatePayeeINBTotalTaxWithheld ],
-            li [] [ inputField "Gross Payments" UpdatePayeeINBGrossPayments ],
-            li [] [ inputField "Total Allowances" UpdatePayeeINBTotalAllowances ],
-            li [] [ inputField "Lump Sum Payment A" UpdatePayeeINBLumpSumPaymentA ],
-            li [] [ inputField "Lunp Sum Payment B" UpdatePayeeINBLumpSumPaymentB ],
-            li [] [ inputField "Lump Sum Payment C" UpdatePayeeINBLumpSumPaymentC ],
-            li [] [ inputField "Lump Sum Payment D" UpdatePayeeINBLumpSumPaymentD ],
-            li [] [ inputField "Community Development Employment Project" UpdatePayeeINBCommunityDevEmpProject ],
-            li [] [ inputField "Fringe Benefits" UpdatePayeeINBFringeBenefits ],
-            li [] [ inputField "Amendment" UpdatePayeeINBAmendment ],
-            li [] [ inputField "Employee Super" UpdatePayeeINBEmployeeSuper ],
-            li [] [ inputField "Workplace Giving" UpdatePayeeINBWorkplaceGiving ],
-            li [] [ inputField "Union Fees" UpdatePayeeINBUnionFees ],
-            li [] [ inputField "Exempt Foreign Employment Income" UpdatePayeeINBExemptForeignEmploymentIncome ],
-            li [] [ inputField "Deductable Annuity" UpdatePayeeINBDeductableAnnuity ],
-            li [] [ inputField "Lump Sum Payment A Type" UpdatePayeeINBLumpSumPaymentAType ]
+    let
+        addrView = addressView individualNBPaymentSummary.address
+    in
+        div [] [
+            h1 [] [ text "Individual Non Business Payment Summary" ],
+            ul [] [
+                li [] [ inputField "Income Type" UpdatePayeeINBIncomeType ],
+                li [] [ inputField "Tax File Number" UpdatePayeeINBTaxFileNumber ],
+                li [] [ inputField "First Name" UpdatePayeeINBFirstName ],
+                li [] [ inputField "Last Name" UpdatePayeeINBLastName ],
+                li [] [ inputField "Second Name" UpdatePayeeINBSecondName ],
+                li [] [ inputField "DOB" UpdatePayeeINBDOB ],
+                li [] [ Html.map UpdatePayeeINBAddress addrView ],
+                li [] [ inputField "Payment Period Start Date" UpdatePayeeINBPaymentPeriodStartDate ],
+                li [] [ inputField "Payment Period End Date" UpdatePayeeINBPaymentPeriodEndDate ],
+                li [] [ inputField "Total Tax Withheld" UpdatePayeeINBTotalTaxWithheld ],
+                li [] [ inputField "Gross Payments" UpdatePayeeINBGrossPayments ],
+                li [] [ inputField "Total Allowances" UpdatePayeeINBTotalAllowances ],
+                li [] [ inputField "Lump Sum Payment A" UpdatePayeeINBLumpSumPaymentA ],
+                li [] [ inputField "Lunp Sum Payment B" UpdatePayeeINBLumpSumPaymentB ],
+                li [] [ inputField "Lump Sum Payment C" UpdatePayeeINBLumpSumPaymentC ],
+                li [] [ inputField "Lump Sum Payment D" UpdatePayeeINBLumpSumPaymentD ],
+                li [] [ inputField "Community Development Employment Project" UpdatePayeeINBCommunityDevEmpProject ],
+                li [] [ inputField "Fringe Benefits" UpdatePayeeINBFringeBenefits ],
+                li [] [ inputField "Amendment" UpdatePayeeINBAmendment ],
+                li [] [ inputField "Employee Super" UpdatePayeeINBEmployeeSuper ],
+                li [] [ inputField "Workplace Giving" UpdatePayeeINBWorkplaceGiving ],
+                li [] [ inputField "Union Fees" UpdatePayeeINBUnionFees ],
+                li [] [ inputField "Exempt Foreign Employment Income" UpdatePayeeINBExemptForeignEmploymentIncome ],
+                li [] [ inputField "Deductable Annuity" UpdatePayeeINBDeductableAnnuity ],
+                li [] [ inputField "Lump Sum Payment A Type" UpdatePayeeINBLumpSumPaymentAType ]
         ]
     ]
 

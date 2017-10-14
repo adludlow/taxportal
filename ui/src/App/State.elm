@@ -60,6 +60,8 @@ updatePaygPayer msg paygPayer =
             ({ paygPayer | tradingName = tradingName })
         UpdatePayerFinancialYear financialYear ->
             ({ paygPayer | financialYear = financialYear })
+        UpdateINBMsg inbMsg ->
+            ({ paygPayer | inb = updateIndividualNonBusinessPaymentSummary inbMsg paygPayer.inb })
 
 updatePaygPayee : PaygPayeeMsg -> PaygPayee -> PaygPayee
 updatePaygPayee msg paygPayee =
@@ -76,50 +78,62 @@ updatePaygPayee msg paygPayee =
             ({ paygPayee | dob = dob })
         UpdatePayeeAddress addressMsg ->
             ({ paygPayee | address = updateAddress addressMsg paygPayee.address })
-        UpdateIndividualNonBusinessPaymentSummaryMsg individualNonBusinessPaymentSummaryMsg ->
-            ({ paygPayee | individualNonBusinessPaymentSummary = updateIndividualNonBusinessPaymentSummary individualNonBusinessPaymentSummaryMsg paygPayee.individualNonBusinessPaymentSummary })
+        UpdateIndividualNonBusinessPaymentSummaryMsg inbMsg ->
+            ({ paygPayee | inb = updateIndividualNonBusinessPaymentSummary inbMsg paygPayee.inb })
 
 updateIndividualNonBusinessPaymentSummary: IndividualNonBusinessPaymentSummaryMsg -> IndividualNonBusinessPaymentSummary -> IndividualNonBusinessPaymentSummary
-updateIndividualNonBusinessPaymentSummary msg individualNonBusinessPaymentSummary =
+updateIndividualNonBusinessPaymentSummary msg inb =
     case msg of
         UpdatePayeeINBIncomeType incomeType ->
-            ({ individualNonBusinessPaymentSummary | incomeType = incomeType })
+            ({ inb | incomeType = incomeType })
+        UpdatePayeeINBTaxFileNumber tfn ->
+            ({ inb  | taxFileNumber = tfn })
+        UpdatePayeeINBFirstName firstName ->
+            ({ inb | firstName = firstName })
+        UpdatePayeeINBLastName lastName ->
+            ({ inb | lastName = lastName })
+        UpdatePayeeINBSecondName secondName ->
+            ({ inb | secondName = secondName })
+        UpdatePayeeINBDOB dob ->
+            ({ inb | dob = dob })
+        UpdatePayeeINBAddress addressMsg ->
+            ({ inb | address = updateAddress addressMsg inb.address })
         UpdatePayeeINBPaymentPeriodStartDate payPeriodStartDate ->
-            ({ individualNonBusinessPaymentSummary | paymentPeriodStartDate = payPeriodStartDate })
+            ({ inb | paymentPeriodStartDate = payPeriodStartDate })
         UpdatePayeeINBPaymentPeriodEndDate payPeriodEndDate ->
-            ({ individualNonBusinessPaymentSummary | paymentPeriodEndDate = payPeriodEndDate })
+            ({ inb | paymentPeriodEndDate = payPeriodEndDate })
         UpdatePayeeINBTotalTaxWithheld totTaxWithheld ->
-            ({ individualNonBusinessPaymentSummary | totalTaxWithheld = totTaxWithheld })
+            ({ inb | totalTaxWithheld = totTaxWithheld })
         UpdatePayeeINBGrossPayments grossPayments ->
-            ({ individualNonBusinessPaymentSummary | grossPayments  = grossPayments })
+            ({ inb | grossPayments  = grossPayments })
         UpdatePayeeINBTotalAllowances totalAllowances ->
-            ({ individualNonBusinessPaymentSummary | totalAllowances = totalAllowances })
+            ({ inb | totalAllowances = totalAllowances })
         UpdatePayeeINBLumpSumPaymentA lumpSumPaymentA ->
-            ({ individualNonBusinessPaymentSummary | lumpSumPaymentA = lumpSumPaymentA })
+            ({ inb | lumpSumPaymentA = lumpSumPaymentA })
         UpdatePayeeINBLumpSumPaymentB lumpSumPaymentB ->
-            ({ individualNonBusinessPaymentSummary | lumpSumPaymentB = lumpSumPaymentB })
+            ({ inb | lumpSumPaymentB = lumpSumPaymentB })
         UpdatePayeeINBLumpSumPaymentC lumpSumPaymentC ->
-            ({ individualNonBusinessPaymentSummary | lumpSumPaymentC = lumpSumPaymentC })
+            ({ inb | lumpSumPaymentC = lumpSumPaymentC })
         UpdatePayeeINBLumpSumPaymentD lumpSumPaymentD ->
-            ({ individualNonBusinessPaymentSummary | lumpSumPaymentD = lumpSumPaymentD })
+            ({ inb | lumpSumPaymentD = lumpSumPaymentD })
         UpdatePayeeINBCommunityDevEmpProject commDevEmpProject ->
-            ({ individualNonBusinessPaymentSummary | communityDevelopmentEmploymentProject = commDevEmpProject })
+            ({ inb | communityDevelopmentEmploymentProject = commDevEmpProject })
         UpdatePayeeINBFringeBenefits fringeBenefits ->
-            ({ individualNonBusinessPaymentSummary | fringeBenefits = fringeBenefits })
+            ({ inb | fringeBenefits = fringeBenefits })
         UpdatePayeeINBAmendment amendment ->
-            ({ individualNonBusinessPaymentSummary | amendment = amendment })
+            ({ inb | amendment = amendment })
         UpdatePayeeINBEmployeeSuper employeeSuper ->
-            ({ individualNonBusinessPaymentSummary | employeeSuper = employeeSuper })
+            ({ inb | employeeSuper = employeeSuper })
         UpdatePayeeINBWorkplaceGiving workplaceGiving ->
-            ({ individualNonBusinessPaymentSummary | workplaceGiving = workplaceGiving })
+            ({ inb | workplaceGiving = workplaceGiving })
         UpdatePayeeINBUnionFees unionFees ->
-            ({ individualNonBusinessPaymentSummary | unionFees = unionFees })
+            ({ inb | unionFees = unionFees })
         UpdatePayeeINBExemptForeignEmploymentIncome foreignEmploymentIncome ->
-            ({ individualNonBusinessPaymentSummary | exemptForeignEmploymentIncome = foreignEmploymentIncome })
+            ({ inb | exemptForeignEmploymentIncome = foreignEmploymentIncome })
         UpdatePayeeINBDeductableAnnuity deductableAnnuity ->
-            ({ individualNonBusinessPaymentSummary | deductableAnnuity = deductableAnnuity })
+            ({ inb | deductableAnnuity = deductableAnnuity })
         UpdatePayeeINBLumpSumPaymentAType lumpSumPaymentAType ->
-            ({ individualNonBusinessPaymentSummary | lumpSumPaymentAType = lumpSumPaymentAType })
+            ({ inb | lumpSumPaymentAType = lumpSumPaymentAType })
 
 updateContactDetails : ContactDetailsMsg -> ContactDetails -> ContactDetails
 updateContactDetails msg contactDetails =
